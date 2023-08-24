@@ -86,6 +86,7 @@ namespace Trakk.KPIDashboard.WebApi.Services
                 HeartBeatCountEarlier = heartBeatsOtherDays
             };
 
+
             return heartBeatDto;
         }
 
