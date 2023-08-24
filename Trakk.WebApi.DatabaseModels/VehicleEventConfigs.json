@@ -1,0 +1,28 @@
+{
+  "VehicleEventConfigurations": [
+    {
+      "SupportedHardware": [ "Undefined" ],
+      "DistanceLong": 150.0,
+      "DistanceShort": 50.0,
+      "BootTime": "00:01:00",
+      "StopTime": "00:05:00",
+      "MinTripPositions": 2,
+      "MaxTunnelTime": "00:45:00",
+      "MinSpeedTunnel": 3,
+      "MaxSpeed": 83.0,
+      "MaxDistancePerPos": 5000, //off
+    },
+    {
+      "SupportedHardware": ["JM01", "GT08"],
+      "DistanceLong": 80.0,
+      "DistanceShort": 20.0,
+      "BootTime": "00:00:40",
+      "StopTime": "00:04:00",
+      "MinTripPositions": 2,
+      "MaxTunnelTime": "00:45:00",
+      "MinSpeedTunnel": 3,
+      "MaxSpeed": 83.0,
+      "MaxDistancePerPos": 5000, // off 
+    }
+  ]
+}

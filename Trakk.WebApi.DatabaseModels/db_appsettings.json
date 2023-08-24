@@ -1,0 +1,14 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "TNTDB5Context": "server=localhost;port=3306;database=trakk-alpha-api;user=root;password=Cargospace24;default command timeout=12000;"
+    //dev
+    //"TNTDB5Context": "server=192.168.0.10;port=3306;database=trakk-alpha-api;user=root;password=Cargospace24;default command timeout=12000;"
+  }
+}

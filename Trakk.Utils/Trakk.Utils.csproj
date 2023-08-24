@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Configurations>Debug;Release;Experimental</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="NLog" Version="5.1.4" />
+      <PackageReference Include="NLog.Extensions.Logging" Version="5.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="MailBodyHtml\AssetEventReportBodyEng.html" />
+      <None Remove="MailBodyHtml\GeofenceEventReportBodyEng.html" />
+      <Content Include="MailBodyHtml\GeofenceEventReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="MailBodyHtml\AssetEventReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Update="MailBodyHtml\AssetEventsEmailReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\AssetEventsEmailReportBodySwe.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\LowBattery.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\PasswordRecoveryBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\SOS.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\PasswordRecoveryBodySwe.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\IsaReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\VehicleSummaryReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\VehicleReminderBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\VehicleEventReportEmailBodySwe.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\VehicleEventReportEmailBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\GeofenceEventProcessorBodyForTrakkerSwe.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\VehicleEventReportBodyEng.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="MailBodyHtml\GeofenceEventProcessorBodyForVehicleSwe.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>
