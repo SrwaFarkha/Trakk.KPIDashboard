@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.GeometriesGraph;
 using Trakk.KPIDashboard.Models.KPIDashboardModels;
 using Trakk.WebApi.DatabaseModels.Models;
 using Trakk.WebApi.Models;
@@ -7,7 +8,6 @@ namespace Trakk.KPIDashboard.WebApi.Services
 {
     public class KPIDashboardService
     {
-
         private readonly TrakkDbContext _db;
 
         public KPIDashboardService(TrakkDbContext db)
@@ -15,28 +15,22 @@ namespace Trakk.KPIDashboard.WebApi.Services
             _db = db;
         }
 
-
-        public async Task<string> GetAccountName()
-        {
-            var account = await _db.Accounts.FirstOrDefaultAsync();
-            return account.Name;
-        }
-
         public async Task<StatisticsDto> GetStatistics()
         {
-            var accountsCount = await _db.Accounts.CountAsync();
-            var customerCount = await _db.Customers.CountAsync();
-            var loraCount = await _db.Hardwares.Where(x => x.HardwareTypeId == (int)Enums.HardwareType.GL52LP).CountAsync();
-            var gsmCount = await _db.Hardwares.Where(x => x.HardwareType.HasSimCardSlot).CountAsync();
-            var trakkersCount = await _db.Trakkers.CountAsync();
+            var data = await _db.Customers
+                .Include(x => x.Accounts)
+                .Include(x => x.Hardwares)
+                .ThenInclude(x => x.HardwareType)
+                .Include(x => x.Trakkers).ToListAsync();
 
+            var hardwares = await _db.Hardwares.Include(x => x.HardwareType).ToListAsync();
             var statisticsDto = new StatisticsDto
             {
-                TotalAccounts = accountsCount,
-                TotalCustomers = customerCount,
-                TotalLora = loraCount,
-                TotalGsm = gsmCount,
-                TotalTrakkers = trakkersCount
+                TotalAccounts = data.SelectMany(x => x.Accounts).Count(),
+                TotalCustomers = data.Count,
+                TotalLora = hardwares.Count(x => x.HardwareTypeId == (int)Enums.HardwareType.GL52LP),
+                TotalGsm = hardwares.Count(x => x.HardwareType.HasSimCardSlot),
+                TotalTrakkers = data.SelectMany(x => x.Trakkers).Count()
             };
 
             return statisticsDto;
@@ -44,10 +38,14 @@ namespace Trakk.KPIDashboard.WebApi.Services
 
         public async Task<LoraGsmGeneralDto> GetLoraGsmGeneral()
         {
-            var loraCount = await _db.Hardwares.Where(x => x.HardwareTypeId == (int)Enums.HardwareType.GL52LP).CountAsync();
-            var gsmCount = await _db.Hardwares.Where(x => x.HardwareType.HasSimCardSlot).CountAsync();
-            var othersCount = await _db.Hardwares.Where(x =>
-                x.HardwareTypeId != (int)Enums.HardwareType.GL52LP && !x.HardwareType.HasSimCardSlot).CountAsync();
+            var hardwares = await _db.Hardwares.Include(x => x.HardwareType).ToListAsync();
+
+            var loraCount = hardwares
+                .Count(x => x.HardwareTypeId == (int)Enums.HardwareType.GL52LP);
+            var gsmCount = hardwares
+                .Count(x => x.HardwareType.HasSimCardSlot);
+            var othersCount = hardwares
+                .Count(x => x.HardwareTypeId != (int)Enums.HardwareType.GL52LP && !x.HardwareType.HasSimCardSlot);
 
             var loraGsmGeneralDto = new LoraGsmGeneralDto
             {
@@ -64,7 +62,7 @@ namespace Trakk.KPIDashboard.WebApi.Services
             var heartBeats = await _db.TrakkerEvents
                 .Where(x => x.TrakkerEventTypeId == Enums.TrakkerEventType.Heartbeat)
                 .OrderBy(x => x.OccuredOn)
-                .Select(x => new TestHeartBeatClass
+                .Select(x => new HeartBeats
                 {
                     TrakkerEventId = x.TrakkerEventId,
                     OccuredOn = x.OccuredOn,
@@ -86,22 +84,85 @@ namespace Trakk.KPIDashboard.WebApi.Services
                 HeartBeatCountEarlier = heartBeatsOtherDays
             };
 
-
             return heartBeatDto;
         }
 
-
-        public async Task<PositionDto> GetPosition()
+        public async Task<PositionDto> GetPositions()
         {
-           // var gsmCount = await _db.Hardwares.Where(x => x.HardwareType.HasSimCardSlot).CountAsync();
-           return new PositionDto();
+            var positions = await _db.Positions
+                .Select(x => new PositionsData
+                {
+                    PositionId = x.PositionId,
+                    CreatedOn = x.CreatedOn,
+                }).ToListAsync();
+
+            DateTime now = DateTime.UtcNow;
+            DateTime todayStart = now.Date;
+            DateTime yesterday = now.AddDays(-1);
+
+            var positionsToday = positions.Count(x => x.CreatedOn > todayStart);
+            var positionsYesterday = positions.Count(x => x.CreatedOn > yesterday);
+            var positionsOtherDays = positions.Count(x => x.CreatedOn < yesterday);
+            var positionDto = new PositionDto
+            {
+                PositionCountToday = positionsToday,
+                PositionCountYesterday = positionsYesterday,
+                PositionCountEarlier = positionsOtherDays
+            };
+
+            return positionDto;
+        }
+
+
+        public async Task<PositionCountContext> GetPositionsLatest12Months()
+        {
+
+            DateTime now = DateTime.UtcNow;
+            DateTime startDate = now.AddMonths(-11);
+
+            var positionCountsByMonth = await _db.Positions
+                .Where(p => p.CreatedOn >= startDate)
+                .GroupBy(p => new { p.CreatedOn.Year, p.CreatedOn.Month })
+                .Select(group => new PositionCountDto
+                {
+                    Year = group.Key.Year,
+                    Month = group.Key.Month,
+                    Count = group.Count()
+                })
+                .OrderByDescending(entry => entry.Year)
+                .ThenByDescending(entry => entry.Month)
+                .ToListAsync();
+
+
+            int totalPositions = positionCountsByMonth.Sum(entry => entry.Count);
+
+            var result = new PositionCountContext
+            {
+                TotalPositions = totalPositions,
+                PositionCount = positionCountsByMonth
+            };
+
+            return result;
+
+        }
+
+        public async Task<List<TrakkerLatestPositionDto>> GetHeatMap()
+        {
+            var trakkerPositions = await _db.Trakkers
+                .Where(x => x.LatestPositionEventId != null)
+                .Select(x => x.LatestPositionEvent.Position)
+                .ToListAsync();
+
+            var collectedData = trakkerPositions
+                .GroupBy(position => new { position.Latitude, position.Longitude })
+                .Select(group => new TrakkerLatestPositionDto
+                {
+                    Latitude = group.Key.Latitude,
+                    Longitude = group.Key.Longitude,
+                })
+                .ToList();
+
+            return collectedData;
         }
     }
-
-    public class TestHeartBeatClass
-    {
-        public int TrakkerEventId { get; set; }
-        public DateTime  OccuredOn { get; set; }
-    }
-
 }

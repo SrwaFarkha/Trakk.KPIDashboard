@@ -4,8 +4,6 @@ using Trakk.KPIDashboard.WebApi.Services;
 using Trakk.WebApi.DatabaseModels.Models;
 using Route = Microsoft.AspNetCore.Routing.Route;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Trakk.KPIDashboard.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -17,25 +15,6 @@ namespace Trakk.KPIDashboard.WebApi.Controllers
         public KPIDashboardController(KPIDashboardService kpiDashboardService)
         {
             _kpiDashboardService = kpiDashboardService;
-        }
-
-
-        // GET api/<KPIDashboardController>/5
-        //[HttpGet()]
-        //public string Get()
-        //{
-
-        //    var db = new TrakkDbContext();
-
-        //    var accounts = db.Accounts.Where(x => x.AccountId == 1).FirstOrDefault();
-        //    return accounts.Email;
-        //}
-
-        [HttpGet]
-        public async Task<string> GetAccountName()
-        {
-            return await _kpiDashboardService.GetAccountName();
-           
         }
 
         [HttpGet]
@@ -62,6 +41,29 @@ namespace Trakk.KPIDashboard.WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("positions")]
+        public async Task<IActionResult> GetPositions()
+        {
+            var result = await _kpiDashboardService.GetPositions();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("positions-latest-12-months")]
+        public async Task<IActionResult> GetPositionsLatest12Months()
+        {
+            var result = await _kpiDashboardService.GetPositionsLatest12Months();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("heat-map")]
+        public async Task<IActionResult> GetHeatMap()
+        {
+            var result = await _kpiDashboardService.GetHeatMap();
+            return Ok(result);
+        }
 
     }
 }

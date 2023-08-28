@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Trakk.KPIDashboard.Models.KPIDashboardModels
 {
-    public class PositionDto
+    public class PositionsData
     {
-        public int PositionCountToday { get; set; }
-        public int PositionCountYesterday { get; set; }
-        public int PositionCountEarlier { get; set; }
+        public int PositionId { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }
