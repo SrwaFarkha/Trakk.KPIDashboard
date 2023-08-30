@@ -1,6 +1,6 @@
 ﻿.grid-container {
     display: grid;
-    grid-template-columns: 25fr 25fr 25fr 25fr;
+    grid-template-columns: 50% 25% 25%;
     background-color: #2196F3;
     padding: 70px 20px 20px 20px;
     height: 100vh;
@@ -13,10 +13,88 @@
     padding: 10px;
     text-align: center;
     height: 168px;
-    border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+    border-radius: 20px;
+    grid-column-gap: 50px;
+
+}
+
+
+.item-1 {
+    text-align: center;
+    border-radius: 20px;
+    grid-template-rows: 168px 168px;
+    grid-template-areas: 'item-1 item-2';
+    grid-template-columns: 298px 298px;
+/*    grid-gap: 5px;
+*/    position: relative;
+    border-radius: 20px;
+}
+
+
+
+.grid-item-1 {
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    text-align: center;
+    height: 168px;
+    border-radius: 20px;
+    float: left;
+/*    grid-gap: 5px;
+*/}
+
+.grid-item-2 {
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    text-align: center;
+    height: 168px;
+    border-radius: 20px;
+    float: right;
+/*    grid-gap: 5px;
+*/}
+
+.grid-item-3 {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    text-align: center;
+    height: 168px;
+    border-radius: 20px;
+   display: grid;
+}
+
+.grid-item-4 {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    text-align: center;
+    height: 168px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+}
+
+.item-2 {
+    text-align: center;
+    border-radius: 20px;
+/*    grid-gap: 50px;
+*/}
+
+
+.item-3 {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.grid-item-8 {
+    height: 100%;
+    border-radius: 20px;
 }
 
 .statistic-table {
@@ -33,6 +111,7 @@
 .p{
     margin-bottom:0;
 }
+
 
 
 
